@@ -85,7 +85,7 @@ defmodule ExAudit.Tracking do
 
       _ ->
         opts = Keyword.drop(opts, [:on_conflict, :conflict_target])
-        module.insert_all(version_schema(), changes, opts)
+        module.insert_all(version_schema(), changes, [{:log, log_change()} | opts])
     end
   end
 
@@ -124,5 +124,9 @@ defmodule ExAudit.Tracking do
 
   defp version_schema do
     Application.get_env(:ex_audit, :version_schema)
+  end
+
+  defp log_change do
+    Application.get_env(:ex_audit, :log_change, true)
   end
 end
